@@ -95,3 +95,7 @@ flutter:
     - assets/fonts/
     - assets/vectors/
   
+  fonts:
+    - family: Aladin-Regular
+      fonts:
+        - asset: assets/fonts/Aladin-Regular.ttf
