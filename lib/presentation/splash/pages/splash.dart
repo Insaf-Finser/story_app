@@ -30,13 +30,21 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> redirect() async {
-  await Future.delayed(const Duration(seconds: 3));
+  await Future.delayed(const Duration(milliseconds: 3000));
   if(!mounted) return;
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (BuildContext context) => const GetStartedPage(),
-    ),
-  );
-}
+  Future.delayed(const Duration(milliseconds: 500), () {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const GetStartedPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation, // Fade effect
+              child: child,
+            );
+          },
+        ),
+      );
+    });
+  }
 }

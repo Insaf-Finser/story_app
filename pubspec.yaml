@@ -99,3 +99,11 @@ flutter:
     - family: Aladin-Regular
       fonts:
         - asset: assets/fonts/Aladin-Regular.ttf
+
+    - family: Bayon
+      fonts:
+        - asset: assets/fonts/bayon-latin.ttf
+
+    - family: Smooch
+      fonts:
+        - asset: assets/fonts/SmoochSans-VariableFont_wght.ttf

@@ -1,18 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:story_app/core/config/theme/app_colors.dart';
 import 'package:story_app/presentation/login/pages/loginpage.dart';
 
 import '../../../core/config/assets/app_images.dart';
 import '../../../core/config/assets/app_vectors.dart';
 
-class GetStartedPage extends StatelessWidget {
+class GetStartedPage extends StatefulWidget {
   const GetStartedPage({super.key});
 
   @override
+  GetStartedPageState createState() => GetStartedPageState();
+}
+
+class GetStartedPageState extends State<GetStartedPage> {
+  bool _isTaped = false;
+  double _scale = 1.0; 
+
+  void _onTap() {
+    setState(() {
+      _isTaped = true;
+      _scale = 0.7; // Shrink the button before expanding
+    });
+
+    Future.delayed(const Duration(milliseconds: 400), () {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation, // Fade effect
+              child: child,
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
+    Future.delayed(const Duration (milliseconds: 800), () {});
+    return Scaffold( 
+      body: Stack( 
+        alignment: Alignment.center,
+        children: [ 
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
             decoration: const BoxDecoration(
@@ -22,51 +55,79 @@ class GetStartedPage extends StatelessWidget {
               ),
             ),
           ),
+          Container(color: Colors.black.withOpacity(0.15)),
 
-          Container(color: Colors.black.withOpacity(0.15),),
-          
-          Padding(
-             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
-             child: Column(children: [
-              const SizedBox(height: 20,),
-                SvgPicture.asset(AppVectors.logolight),
-                const Spacer(),
-                
-                InkWell(
-                  onTap:(){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) =>const LoginPage()),);
-                  },
-                    child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: const Offset(0, -4),
-                        blurRadius: 10,
+          Column(
+            children: [
+              const SizedBox(height: 95),
+              SvgPicture.asset(AppVectors.logolight, height: 90),
+              const Spacer(),
+
+              // Shrinking and morphing button into a large box
+              TweenAnimationBuilder(
+                duration: const Duration(milliseconds: 500),
+                tween: Tween<double>(begin: 1.0, end: _scale),
+                builder: (context, double scale, child) {
+                  return Transform.scale(
+                    scale: scale,
+                    child: InkWell(
+                      onTap: _onTap,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        height:65,
+                        width:65,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: _isTaped ? Border.all(color: const Color.fromARGB(0, 173, 154, 92), width: 1) :Border.all(color: AppColors.primary, width: 3),
+                          borderRadius: BorderRadius.circular(32), // Optional: rounded corners
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              offset: const Offset(0, -4),
+                              blurRadius: 20,
+                            ),
+                          ],
                         ),
-                      ],
-                      ),
-                      child: SvgPicture.asset(
-                      AppVectors.roundB,
-                      height: 50,
-                      width: 50,
+                        alignment: Alignment.center,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          height: 52,
+                          width: 52,
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: _isTaped ? Border.all(color: const Color.fromARGB(0, 173, 154, 92), width: 1) :Border.all(color: AppColors.primary, width: 5),
+                            borderRadius: BorderRadius.circular(32), // Optional: rounded corners
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                offset: const Offset(0, -4),
+                                blurRadius: 20,
+                              ),
+                            ],
+                          ),
+                          alignment: Alignment.center,
+                          child:  null, 
+                        ),
                       ),
                     ),
-                    ),
-
-
-                ),
-                const SizedBox(height: 2,),
-                Text('begin', style: TextStyle(color: Colors.white.withOpacity(0.3), fontFamily: 'Aladin-Regular', fontSize: 32 ,letterSpacing: 7 ),),
-                const SizedBox(height: 25,),
-
-              ]
-              
-              
+                  );
+                },
               ),
-           ),
+
+              const SizedBox(height: 6),
+              Text(
+                'begin',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.4),
+                  fontFamily: 'Aladin-Regular',
+                  fontSize: 32,
+                  letterSpacing: 7,
+                ),
+              ),
+              const SizedBox(height: 62),
+            ],
+          ),
         ],
       ),
     );
